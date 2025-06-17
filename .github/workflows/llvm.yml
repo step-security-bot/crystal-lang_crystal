@@ -44,8 +44,13 @@ jobs:
           - {runs-on: ubuntu-24.04, codename: noble}
     name: "LLVM ${{ matrix.llvm_version || 'Nightly' }}"
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1
+        with:
+          egress-policy: audit
+
       - name: Checkout Crystal source
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Install LLVM ${{ matrix.llvm_version || 'Nightly' }}
         run: |
@@ -59,7 +64,7 @@ jobs:
           sudo apt install -y llvm${{ matrix.llvm_version && format('-{0}', matrix.llvm_version) || '' }}-dev lld
 
       - name: Install Crystal
-        uses: crystal-lang/install-crystal@v1
+        uses: crystal-lang/install-crystal@cdf26dcd488490c9939e9d4d62cab169c9e4f20d # v1.8.2
         with:
           crystal: "1.16.3"
 
